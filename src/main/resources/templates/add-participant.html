@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Participant Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Linking Common CSS -->
+    <script src="/js/auto-logout.js"></script> <!-- Include Auto Logout Script -->
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand ms-3" href="/admin/dashboard">Admin Dashboard</a>
+    <div class="ms-auto me-3">
+        <form th:action="@{/logout}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-light">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<!-- Sidebar & Content -->
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar bg-light p-3">
+        <h5 class="text-dark">Menu</h5>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/participants">📋 View Participants</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/admin/participant/new">➕ Add Participant</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="form-container">
+            <h2 th:text="${participant.id == null ? '📝 Add New Participant' : '✏ Edit Participant'}"></h2>
+
+            <!-- Display error message if email or phone is duplicate -->
+            <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+            <!-- Dynamic Form: Uses different action for Add/Edit -->
+            <form th:action="@{${participant.id == null} ? '/admin/participant/save' : '/admin/participant/update'}"
+                  th:object="${participant}" method="post">
+
+                <input type="hidden" th:field="*{id}"> <!-- Hidden ID for edit -->
+
+                <!-- Name & Email -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" th:field="*{name}" placeholder="Enter full name" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}" placeholder="Enter email" required>
+                        <small class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+                    </div>
+                </div>
+
+                <!-- Phone & Course -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" th:field="*{phoneNumber}" placeholder="Enter phone number" required>
+                        <small class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></small>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Course Enrolled</label>
+                        <input type="text" class="form-control" th:field="*{courseEnrolled}" placeholder="Enter course name">
+                    </div>
+                </div>
+
+                <!-- Enrollment Date -->
+                <div class="mb-3">
+                    <label class="form-label">Enrollment Date</label>
+
+                    <!-- Read-Only Text Display -->
+                    <div id="date-display">
+                        <span th:text="${participant.enrollmentDate != null} ? ${#temporals.format(participant.enrollmentDate, 'dd-MMM-yyyy')} : 'Not Set'"></span>
+                        <button type="button" class="btn btn-sm btn-outline-primary ms-2" onclick="showDateInput()">🗓 Edit Date</button>
+                    </div>
+
+                    <!-- Hidden Date Input (Initially Hidden) -->
+                    <div id="date-input" style="display: none;">
+                        <input type="date" class="form-control"
+                               name="enrollmentDate"
+                               id="enrollmentDate"
+                               th:value="${participant.enrollmentDate != null} ? ${#temporals.format(participant.enrollmentDate, 'yyyy-MM-dd')} : ''">
+                    </div>
+                </div>
+
+                <script>
+                    function showDateInput() {
+                        document.getElementById("date-display").style.display = "none";
+                        document.getElementById("date-input").style.display = "block";
+                    }
+                </script>
+
+                <h4 class="text-center mt-4">📍 Address</h4>
+
+                <!-- Address Fields -->
+                <div class="mb-3">
+                    <label class="form-label">Address Line 1</label>
+                    <input type="text" class="form-control" th:field="*{address.addressLine1}" placeholder="Enter street address" required>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <label class="form-label">City</label>
+                        <input type="text" class="form-control" th:field="*{address.city}" placeholder="Enter city" required>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">ZIP Code</label>
+                        <input type="text" class="form-control" th:field="*{address.zip}" placeholder="Enter ZIP code" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Country</label>
+                    <input type="text" class="form-control" th:field="*{address.country}" placeholder="Enter country" required>
+                </div>
+
+                <!-- Buttons -->
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-save" th:text="${participant.id == null ? '💾 Save' : '💾 Update'}"></button>
+                    <a href="/admin/participants" class="btn btn-cancel">❌ Cancel</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
