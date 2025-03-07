@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TrainingservApplication {
 
 	public static void main(String[] args) {
-		//DatabaseUrlConverter.getJdbcUrl();
+		DatabaseUrlConverter.getJdbcUrl();
 		SpringApplication.run(TrainingservApplication.class, args);
 	}
 
