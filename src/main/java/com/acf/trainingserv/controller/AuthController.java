@@ -22,6 +22,11 @@ public class AuthController {
         return "login";
     }
 
+    @GetMapping("/")
+    public String loginPageLoad() {
+        return "login";
+    }
+
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("user", new User());  // ✅ Ensures the "user" object is available
