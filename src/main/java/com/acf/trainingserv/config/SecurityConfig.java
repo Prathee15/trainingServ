@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .invalidSessionUrl("/login?timeout") // Redirect to login when session expires
                         .sessionFixation().newSession()  // Create a new session after login
-                        .maximumSessions(1) // Limit user to one active session
+                        .maximumSessions(15) // Limit user to one active session
                         .expiredUrl("/login?expired") // Redirect if session expires
                 );
 

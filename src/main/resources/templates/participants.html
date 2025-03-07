@@ -230,8 +230,13 @@
                         <td th:text="${participant.address.addressLine1 + ', ' + participant.address.city + ', ' + participant.address.zip + ', ' + participant.address.country}"></td>
                         <td>
                             <a th:href="@{/admin/participant/form(id=${participant.id})}" class="btn btn-warning btn-sm">✏ Edit</a>
-                            <a th:href="@{/admin/participant/delete/{id}(id=${participant.id})}" class="btn btn-danger btn-sm">🗑</a>
+                            <a th:href="@{/admin/participant/delete/{id}(id=${participant.id})}" class="btn btn-danger btn-sm" onclick="return confirmDelete()">Delete</a>
                         </td>
+                        <script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this participant?");
+    }
+</script>
                     </tr>
                     </tbody>
                 </table>

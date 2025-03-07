@@ -1,7 +1,10 @@
 package com.acf.trainingserv.service;
 
+import com.acf.trainingserv.model.BackupParticipant;
 import com.acf.trainingserv.model.Participant;
+import com.acf.trainingserv.repository.BackupParticipantRepository;
 import com.acf.trainingserv.repository.ParticipantRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +22,9 @@ import java.util.Optional;
 public class ParticipantService {
 
     private final ParticipantRepository participantRepository;
+
+    @Autowired
+    private BackupParticipantRepository backupRepository;
 
     @Autowired
     public ParticipantService(ParticipantRepository participantRepository) {
@@ -60,8 +66,16 @@ public class ParticipantService {
             return ResponseEntity.ok(participantRepository.save(updatedParticipant));
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @Transactional
     public void deleteParticipant(Long id) {
+
+        Optional<Participant> participant = participantRepository.findById(id);
+        if (participant.isEmpty()) {
+            return;
+        }
+        BackupParticipant backup = new BackupParticipant(participant.get());
+        backupRepository.save(backup);
+        // Delete from Main Table
         participantRepository.deleteById(id);
     }
 
