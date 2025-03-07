@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 @Configuration
 public class DatabaseUrlConverter {
     public static void getJdbcUrl() {
-        String databaseUrl = "postgres://u9dfaged1r4smd:pd08c2552a0d7d8abe47ee93b545bbf234355feb5304a440dd6dde978d3fdac7e@cbec45869p4jbu.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d43hdoj2c1loup";//System.getenv("DATABASE_URL");
+        String databaseUrl = System.getenv("DATABASE_URL");
         if (databaseUrl != null) {
             try {
                 URI dbUri = new URI(databaseUrl);
