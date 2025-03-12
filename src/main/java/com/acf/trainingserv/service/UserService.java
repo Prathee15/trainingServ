@@ -26,26 +26,26 @@ public class UserService {
     }
 
     public String registerUser(User user) {
-        // Fetch stored passkey
-//        Optional<Passkey> storedPasskey = passkeyRepository.findById(1L);
-//        if (storedPasskey.isEmpty()) {
-//            return "Passkey not set. Contact admin.";
-//        }
-//
-//        // Verify entered passkey
-//        boolean isPasskeyValid = passwordEncoder.matches(user.getPassKey(), storedPasskey.get().getHashedKey());
-//        if (!isPasskeyValid) {
-//            return "Invalid passkey.";
-//        }
+         //Fetch stored passkey
+        Optional<Passkey> storedPasskey = passkeyRepository.findById(1L);
+        if (storedPasskey.isEmpty()) {
+            return "Passkey not set. Contact admin.";
+        }
 
-        // Hash and save password
+        // Verify entered passkey
+        boolean isPasskeyValid = passwordEncoder.matches(user.getPassKey(), storedPasskey.get().getHashedKey());
+        if (!isPasskeyValid) {
+            return "Invalid passkey.";
+        }
+
+         //Hash and save password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "User registered successfully.";
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+        return userRepository.findByUsernameIgnoreCase(username).orElse(null);
     }
 }
 
